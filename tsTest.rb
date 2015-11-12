@@ -1,5 +1,6 @@
 require 'tweetstream'
 
+#initiate tweet stream connection
 TweetStream.configure do |config|
   config.consumer_key       = 'FwagvzNoy7CfnkfZJkdBQ4RLL'
   config.consumer_secret    = 'LzySWk4kBsiZBKt6uzPgtF0kDL9tCAKTbZTIWATjmtPDMeIuC5'
@@ -8,6 +9,7 @@ TweetStream.configure do |config|
   config.auth_method        = :oauth
 end
 
-TweetStream::Client.new.track('hope', 'love') do |status|
+#retrive tweets containing __ words
+TweetStream::Client.new.track('hope', 'love', 'kindness') do |status|
   puts "#{status.text}"
 end
