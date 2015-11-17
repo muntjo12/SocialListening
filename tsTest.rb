@@ -9,7 +9,17 @@ TweetStream.configure do |config|
   config.auth_method        = :oauth
 end
 
-#retrive tweets containing __ words
-TweetStream::Client.new.track('hope', 'love', 'kindness') do |status|
-  puts "#{status.text}"
+#gets topic list from words.txt and initiates them as Hash[keys]
+topics = Hash.new
+File.open("words.txt") do |fp|
+  fp.each do |line|
+    key = line.chomp.split("\n")
+    topics[key] = 0
+  end
 end
+
+tsThread = Thread.new {
+  TweetStream::Client.new.track(topics.keys.flatten.join(", ")) do |status|
+  puts "HOPE: #{status.text}"
+  puts ""
+end}.join
