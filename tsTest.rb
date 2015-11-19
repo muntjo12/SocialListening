@@ -18,8 +18,23 @@ File.open("words.txt") do |fp|
   end
 end
 
-tsThread = Thread.new {
+#stream output of tweets containing topics[key]
+tweets = Queue.new
+tweetStreamThread = Thread.new {
   TweetStream::Client.new.track(topics.keys.flatten.join(", ")) do |status|
-  puts "HOPE: #{status.text}"
-  puts ""
-end}.join
+  tweets.enq(status.text)
+end}
+
+#check topics occurences in each tweet
+occurThread = Thread.new {
+  while true do
+    if !tweets.empty?
+      tweet = tweets.deq
+      topics.each_key {|k| topics[k] += 1 if tweet.downcase.include? k.to_s[2..-3]}
+      puts topics
+    end
+  end
+}
+
+tweetStreamThread.join
+occurThread.join
