@@ -31,18 +31,20 @@ end}
 
 #check occurences of topics in a given tweet
 def occur(hash, queue)
-if !queue.empty?
-  value = queue.deq
-  hash.each_key {|k| hash[k] += 1 if value.downcase.include? k.to_s[2..-3]}
-end end
+    value = queue.deq
+    hash.each_key {|k| hash[k] += 1 if value.downcase.include? k.to_s[2..-3]}
+    #visual
+    puts hash
+end
 
 #check topics occurences in each tweet
 occurThread = Thread.new {
   while true do
-    occur(topics, tweets)
-    puts topics
-  end}
-  
+    occur(topics, tweets) if !tweets.empty?
+  end
+}
+
+#call functions and begin threads
 get_topics(topics, topicsfile)
 tweetStreamThread.join
 occurThread.join
